@@ -1,0 +1,153 @@
+Q1. 
+Adding an element to the end of an ArrayList implemented with an array is considered a constant time operation in general because the ArrayList maintains an amortized constant time complexity for appending elements. 
+
+Q2. Let's analyze the best and worst case running times (using Big O) for the three algorithms of removing a particular Integer value from a sorted ArrayList.
+
+a) Algorithm I: Perform a linear search to find the value, starting from the BEGINNING of the list. When the value is found, remove it by calling the ArrayList's remove(index) method.
+
+Best case: The target value is the first element in the ArrayList. The algorithm performs one comparison and removes the element in O(1) time, resulting in O(1) time complexity.
+
+Worst case: The target value is at the end of the ArrayList or not present in the list. The algorithm needs to perform N comparisons, where N is the number of elements in the ArrayList, and then remove the element, which takes O(N) time due to shifting elements. Therefore, the worst-case time complexity is O(N).
+
+b) Algorithm II: Perform a linear search to find the value, starting from the END of the list. When the value is found, remove it by calling the ArrayList's remove(index) method.
+
+Best case: The target value is the last element in the ArrayList. The algorithm performs one comparison and removes the element in O(1) time, resulting in O(1) time complexity.
+
+Worst case: The target value is at the beginning of the ArrayList or not present in the list. The algorithm needs to perform N comparisons, where N is the number of elements in the ArrayList, and then remove the element, which takes O(N) time due to shifting elements. Therefore, the worst-case time complexity is O(N).
+
+c) Algorithm III: Perform a binary search to find the value. When the value is found, remove it by calling the ArrayList's remove(index) method.
+
+Best case: The target value is at the middle of the ArrayList. The algorithm performs a constant number of comparisons and removes the element in O(1) time, resulting in O(1) time complexity.
+
+Worst case: The target value is at one of the ends of the ArrayList or not present in the list. The binary search algorithm requires O(log N) comparisons, where N is the number of elements in the ArrayList. After finding the element, removing it takes O(N) time due to shifting elements. Therefore, the worst-case time complexity is O(N) + O(log N), which simplifies to O(N).
+
+Q3.
+a) If there are an odd number of nodes, this method will find the middle node of the linked list. Let's trace the code with a list of 9 nodes to see how it works:
+
+Suppose we have a linked list with nodes containing values 1, 2, 3, 4, 5, 6, 7, 8, 9 (in that order). The head node will point to the first node with the value 1.
+
+Initially, p is set to the head node (1), and q is set to the next node (2).
+In the while loop, p moves one step forward (p = p.next), so it becomes the node with value 2.
+q moves two steps forward (q = q.next.next), so it becomes the node with value 4.
+This process continues: p moves one step forward, and q moves two steps forward, until q becomes null or reaches the end of the linked list.
+After the loop, p will be pointing to the middle node (node with value 5) because it moves at half the speed of q.
+Therefore, for a linked list with an odd number of nodes, the mystery() method will return the value of the middle node.
+
+b) If there are an even number of nodes, the original code will encounter a problem. Let's consider an example with a list of 8 nodes: 1, 2, 3, 4, 5, 6, 7, 8.
+
+Initially, p is set to the head node (1), and q is set to the next node (2).
+In the while loop, p moves one step forward (p = p.next), so it becomes the node with value 2.
+q moves two steps forward (q = q.next.next), so it becomes the node with value 4.
+This process continues, and at some point, q will reach the end of the linked list and become null.
+When q is null, the loop condition q != null is false, and the loop exits.
+At this point, p will be pointing to the second-to-last node (node with value 7).
+The original code doesn't handle the case of an even number of nodes correctly, as it returns the value of the second-to-last node instead of the exact middle node.
+
+To modify the method to handle both odd and even numbers of nodes correctly, we can check if q becomes null inside the loop. If it becomes null, we know that the number of nodes is even, and we can return the value of the node currently pointed to by p as well as the value of the next node. Here's the modified code:
+public E mystery() {
+    Node<E> p = head;
+    Node<E> q = head.next;
+    while (q != null && q.next != null) {
+        p = p.next;
+        q = q.next.next;
+    }
+    return p.data;
+}
+c) The runtime complexity of this method in big-O notation is O(n), where n is the number of elements in the linked list. The method uses a slow and fast pointer approach, where the slow pointer (p) moves one step at a time, and the fast pointer (q) moves two steps at a time. In the worst case, the fast pointer will traverse the entire linked list, visiting every node once, while the slow pointer will traverse half the number of nodes. Therefore, the time complexity is linearly proportional to the number of elements in the linked list, resulting in O(n) complexity.
+Q4.
+public SinglyLinkedList() {
+    head = new Node<>(null); // Create the dummy node with null data
+    size = 0; // Set the initial size of the list to 0
+}
+public void add(int index, E element) {
+    if (index < 0 || index > size) {
+        throw new IndexOutOfBoundsException("Invalid index");
+    }
+
+    Node<E> newNode = new Node<>(element); // Create a new node with the given element
+
+    // Find the node at the previous index
+    Node<E> previousNode = getNode(index - 1);
+
+    // Insert the new node after the previous node
+    newNode.next = previousNode.next;
+    previousNode.next = newNode;
+
+    size++; // Increase the size of the list
+}
+
+public E remove(int index) {
+    if (index < 0 || index >= size) {
+        throw new IndexOutOfBoundsException("Invalid index");
+    }
+
+    // Find the node at the previous index
+    Node<E> previousNode = getNode(index - 1);
+
+    // Get the node to be removed
+    Node<E> nodeToRemove = previousNode.next;
+
+    // Update the links to bypass the node to be removed
+    previousNode.next = nodeToRemove.next;
+    nodeToRemove.next = null; // Disconnect the removed node from the list
+
+    size--; // Decrease the size of the list
+
+    return nodeToRemove.data;
+}
+
+private Node<E> getNode(int index) {
+    Node<E> currentNode = head;
+    for (int i = 0; i <= index; i++) {
+        currentNode = currentNode.next;
+    }
+    return currentNode;
+}
+Q5.
+public E pop() {
+    if (isEmpty()) {
+        return null; // Return null if the stack is empty
+    }
+    return data.remove(0); // Remove and return the top element from the stack (index 0)
+}
+The worst-case runtime complexity of pop is O(n) because removing an element from the beginning of an ArrayList requires shifting all subsequent elements to fill the gap. In the worst case, when the top element is removed, all remaining elements in the ArrayList need to be shifted one position to the left.
+public void push(E element) {
+    data.add(0, element); // Add the new element at the beginning of the ArrayList (index 0)
+}
+The worst-case runtime complexity of push is also O(n) because adding an element at the beginning of an ArrayList requires shifting all existing elements one position to the right. In the worst case, when a new element is pushed onto the stack, all existing elements need to be shifted one position to the right to make room for the new element.
+Q6.
+import java.util.Stack;
+
+public class StackSorter {
+    public static Stack<Integer> sort(Stack<Integer> s) {
+        Stack<Integer> sortedStack = new Stack<>();
+
+        while (!s.isEmpty()) {
+            int temp = s.pop();
+
+            while (!sortedStack.isEmpty() && sortedStack.peek() > temp) {
+                s.push(sortedStack.pop());
+            }
+
+            sortedStack.push(temp);
+        }
+
+        return sortedStack;
+    }
+
+    public static void main(String[] args) {
+        Stack<Integer> stack = new Stack<>();
+        stack.push(5);
+        stack.push(2);
+        stack.push(7);
+        stack.push(1);
+        stack.push(3);
+
+        Stack<Integer> sortedStack = sort(stack);
+
+        System.out.println("Sorted Stack:");
+        while (!sortedStack.isEmpty()) {
+            System.out.println(sortedStack.pop());
+        }
+    }
+}
